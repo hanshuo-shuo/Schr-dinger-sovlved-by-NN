@@ -1,0 +1,84 @@
+\documentclass[crop,tikz]{standalone}
+\usepackage{graphics}
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{calc,shadows}
+\usetikzlibrary{decorations.markings,scopes}
+\usetikzlibrary{arrows,snakes,backgrounds,shapes}
+\usetikzlibrary{decorations.pathmorphing}
+
+\newcommand{\blue}{\textcolor{blue}}
+\newcommand{\red}{\textcolor{red}}
+\newcommand{\purple}{\textcolor{purple}}
+
+
+\begin{document}
+\def\layersep{2.5cm}
+\begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
+  \tikzstyle{every pin edge}=[<-,shorten <=1pt]
+  \tikzstyle{neuron}=[circle,fill=white,minimum size=20pt,inner sep=0pt]
+  \tikzstyle{rect}=[rectangle,draw,minimum width=25pt]
+  \tikzstyle{input}=[neuron,draw,fill=cyan!30];
+  \tikzstyle{output}=[neuron,draw,fill=blue!30];
+  \tikzstyle{hidden}=[neuron,draw,fill=magenta!30];
+  \tikzstyle{annot} = [text width=4em, text centered]
+  
+  \foreach \name / \y in {x/1,t/2}
+  \node[input] (I-\y) at (0,-\y) {$\name$};
+  
+  \foreach \name / \y in {1,2,4,5}
+  \path[yshift=1.5cm] node[hidden] (H1-\name) at (\layersep,-\y) {};
+  \node[neuron] (H1-3) at (\layersep,-1.5) {$\vdots$};
+  
+  \foreach \name / \y in {1,2,4,5}
+  \path[yshift=1.5cm] node[hidden] (H2-\name) at (2*\layersep,-\y) {};
+  \node[neuron] (H2-3) at (2*\layersep,-1.5) {$\vdots$};
+  
+  \foreach \name / \y in {1,2,4,5}
+  \path[yshift=1.5cm] node[hidden] (H3-\name) at (3*\layersep,-\y) {};
+  \node[neuron] (H3-3) at (3*\layersep,-1.5) {$\vdots$};
+
+  \foreach \name / \y in {u/1,v/2}
+  \path[yshift=0cm] node[output] (O-\y) at (4*\layersep,-\y) {$\name$};
+  
+  \foreach \src in {1,2}
+  \foreach \des in {1,2,4,5}
+  \path (I-\src) edge (H1-\des);
+  
+  \foreach \src in {1,2,4,5}
+  \foreach \des in {1,2,4,5}
+  \path (H1-\src) edge (H2-\des);
+  
+  \foreach \src in {1,2,4,5}
+  \foreach \des in {1,2,4,5}
+  \path (H2-\src) edge (H3-\des);
+  
+  \foreach \src in {1,2,4,5}
+  \foreach \des in {1,2}
+  \path (H3-\src) edge (O-\des);
+
+  \node[rect] (ut) at (5*\layersep, .6) {$u_t$};
+  \node[rect] (ux) at (ut.south) [below=0.25cm] {$u_x$};
+  \node[rect] (uxx) at (ux.south) [below=.25cm] {$u_{xx}$}; 
+
+  \node[rect] (vt) at (5*\layersep, -2.2) {$v_t$};
+  \node[rect] (vx) at (vt.south) [below=0.25cm] {$v_x$};
+  \node[rect] (vxx) at (vx.south) [below=.25cm] {$v_{xx}$};
+
+  \path (O-1) edge (ut.west);
+  \path (O-1) edge (ux.west);
+  \path (O-1) edge (uxx.west);
+
+  \path (O-2) edge (vt.west);
+  \path (O-2) edge (vx.west);
+  \path (O-2) edge (vxx.west);
+
+  
+  
+\end{tikzpicture}
+
+
+
+\end{document}
+
+
